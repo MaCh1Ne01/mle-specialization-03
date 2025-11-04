@@ -1,0 +1,19 @@
+[project]
+name = "mle-specialization-03"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "cookiecutter-data-science>=2.3.0",
+    "dagshub>=0.6.3",
+    "feast>=0.56.0",
+    "jupyterlab>=4.4.10",
+    "matplotlib>=3.10.7",
+    "mlflow<3.0",
+    "numpy>=2.3.4",
+    "pandas>=2.3.3",
+    "scikit-learn>=1.7.2",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.5",
+]
