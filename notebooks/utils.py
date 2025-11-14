@@ -278,7 +278,7 @@ def writing_feature_table(dataframe:pd.DataFrame, file_name:str, init_path:str):
 
 def predicting_regression_model(model:any, model_name:str, X:pd.DataFrame, init_path:str=".."):
     y_pred = model.predict(X)
-    print(f"{model_name} model: ({X.shape[0]} values were predicted.")
+    print(f"{model_name} model: {X.shape[0]} values were predicted and saved.")
     pd.DataFrame(y_pred, columns=[TARGET]).to_csv(f"{init_path}/data/processed/{model_name}_predictions.csv", index=False)
     return y_pred
 
@@ -406,18 +406,23 @@ def visualizing_clustering_model_performance(model_name:str, components_datafram
     plt.legend()
     plt.show()
 
-def graphing_regression_models_results(base_model_metrics:tuple, model_01_metrics:tuple, model_02_metrics:tuple):
+    
+def graphing_regression_models_results(metrics_01:tuple, metrics_02:tuple, metrics_03:tuple, metrics_04:tuple):
     models_results = {
-        "Model": [BASE_MODEL_NAME, MODEL_01_NAME, MODEL_02_NAME],
-        "Root Mean Squared Error": [base_model_metrics[0], model_01_metrics[0], model_02_metrics[0]],
-        "Squared R": [base_model_metrics[1], model_01_metrics[1], model_02_metrics[1]]
+        "Model": [MODEL_01_NAME, MODEL_02_NAME, MODEL_03_NAME, MODEL_04_NAME],
+        "Mean Absolute Error": [metrics_01[0], metrics_02[0], metrics_03[0], metrics_04[0]],
+        "Root Mean Squared Error": [metrics_01[1], metrics_02[1], metrics_03[1], metrics_04[1]],
+        "Squared R": [metrics_01[2], metrics_02[2], metrics_03[2], metrics_04[2]],
+        "Mean Absolute Percentage Error": [metrics_01[3], metrics_02[3], metrics_03[3], metrics_04[3]],
+        "Symmetric Mean Absolute Percentage Error": [metrics_01[4], metrics_02[4], metrics_03[4], metrics_04[4]],
     }
 
-    df_results = pd.DataFrame(models_results).sort_values("Root Mean Squared Error", ascending=False)
+    # MAE
+    df_results = pd.DataFrame(models_results).sort_values("Mean Absolute Error", ascending=True)
 
-    plt.figure(figsize=(8, 4))
+    plt.figure(figsize=(24, 4))
     barplot = sns.barplot(
-        x="Root Mean Squared Error", 
+        x="Mean Absolute Error", 
         y="Model", 
         data=df_results,
         hue="Model",
@@ -425,6 +430,36 @@ def graphing_regression_models_results(base_model_metrics:tuple, model_01_metric
         legend=False,
         order=df_results["Model"].tolist(),
         hue_order=df_results["Model"].tolist()
+    )
+
+    for i, row in df_results.reset_index(drop=True).iterrows():
+        plt.text(
+            x=row["Mean Absolute Error"] / 2,
+            y=i,
+            s=f"MAE = {row['Mean Absolute Error']:.4f}",
+            ha="center",
+            va="center",
+            fontsize=10,
+            color="black"
+        )
+
+    plt.title("Comparison of MAE between models")
+    plt.xlabel("Mean Absolute Error (Lower is better)")
+    plt.ylabel("Model")
+
+    # RMSE
+    df_results = pd.DataFrame(models_results).sort_values("Root Mean Squared Error", ascending=True)
+
+    plt.figure(figsize=(24, 4))
+    barplot = sns.barplot(
+        x="Root Mean Squared Error", 
+        y="Model", 
+        data=df_results,
+        hue="Model",
+        palette="Greens_r",
+        legend=False,
+        order=df_results["Model"].tolist(),        # Dataframe order
+        hue_order=df_results["Model"].tolist()     # Same order to colors
     )
 
     for i, row in df_results.reset_index(drop=True).iterrows():
@@ -442,16 +477,16 @@ def graphing_regression_models_results(base_model_metrics:tuple, model_01_metric
     plt.xlabel("Root Mean Squared Error (Lower is better)")
     plt.ylabel("Model")
 
-
+    # R²
     df_results = pd.DataFrame(models_results).sort_values("Squared R", ascending=False)
 
-    plt.figure(figsize=(8, 4))
+    plt.figure(figsize=(24, 4))
     barplot = sns.barplot(
         x="Squared R", 
         y="Model", 
         data=df_results,
         hue="Model",
-        palette="Greens_r",
+        palette="Blues_r",
         legend=False,
         order=df_results["Model"].tolist(),        # Dataframe order
         hue_order=df_results["Model"].tolist()     # Same order to colors
@@ -468,8 +503,68 @@ def graphing_regression_models_results(base_model_metrics:tuple, model_01_metric
             color="black"
         )
 
-    plt.title("Comparison of Squared R between models")
+    plt.title("Comparison of R² between models")
     plt.xlabel("Squared R (Closer to 1 is better)")
+    plt.ylabel("Model")
+
+    # MAPE
+    df_results = pd.DataFrame(models_results).sort_values("Mean Absolute Percentage Error", ascending=True)
+
+    plt.figure(figsize=(24, 4))
+    barplot = sns.barplot(
+        x="Mean Absolute Percentage Error", 
+        y="Model", 
+        data=df_results,
+        hue="Model",
+        palette="Oranges_r",
+        legend=False,
+        order=df_results["Model"].tolist(),        # Dataframe order
+        hue_order=df_results["Model"].tolist()     # Same order to colors
+    )
+
+    for i, row in df_results.reset_index(drop=True).iterrows():
+        plt.text(
+            x=row["Mean Absolute Percentage Error"] / 2,
+            y=i,
+            s=f"MAPE = {row['Mean Absolute Percentage Error']:.4f}",
+            ha="center",
+            va="center",
+            fontsize=10,
+            color="black"
+        )
+
+    plt.title("Comparison of MAPE between models")
+    plt.xlabel("Mean Absolute Percentage Error (Lower is better)")
+    plt.ylabel("Model")
+
+    # SMAPE
+    df_results = pd.DataFrame(models_results).sort_values("Symmetric Mean Absolute Percentage Error", ascending=True)
+
+    plt.figure(figsize=(24, 4))
+    barplot = sns.barplot(
+        x="Symmetric Mean Absolute Percentage Error", 
+        y="Model", 
+        data=df_results,
+        hue="Model",
+        palette="Purples_r",
+        legend=False,
+        order=df_results["Model"].tolist(),        # Dataframe order
+        hue_order=df_results["Model"].tolist()     # Same order to colors
+    )
+
+    for i, row in df_results.reset_index(drop=True).iterrows():
+        plt.text(
+            x=row["Symmetric Mean Absolute Percentage Error"] / 2,
+            y=i,
+            s=f"SMAPE = {row['Symmetric Mean Absolute Percentage Error']:.4f}",
+            ha="center",
+            va="center",
+            fontsize=10,
+            color="black"
+        )
+
+    plt.title("Comparison of SMAPE between models")
+    plt.xlabel("Symmetric Mean Absolute Percentage Error (Lower is better)")
     plt.ylabel("Model")
 
 

@@ -27,9 +27,10 @@ CUSTOM_ORDER = {
     "Education": ["Basic","2n Cycle","Graduation","Master","PhD"]
 }
 FEAST_REPOSITORY_PATH = "/feast_service/fs_mle_03/feature_repo/"
-BASE_MODEL_NAME = "Linear Regression"
-MODEL_01_NAME = "LightGBM Regressor"
+BASE_MODEL_NAME = "Dummy Regressor"
+MODEL_01_NAME = "ElasticNet"
 MODEL_02_NAME = "XGBoost Regressor"
-MODEL_03_NAME = "Ridge Stacking Ensemble"
+MODEL_03_NAME = "LightGBM Regressor"
+MODEL_04_NAME = "Ridge Stacking Ensemble"
 TRAINING_DATA_LABEL = "Training Data"
 TESTING_DATA_LABEL = "Testing Data"
