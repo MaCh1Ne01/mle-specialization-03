@@ -11,6 +11,8 @@ import joblib
 from datetime import datetime
 from typing import List, Dict
 import logging
+import lime
+import shap
 from mlflow.data import from_pandas
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
@@ -1001,3 +1003,36 @@ def showing_permutation_importance(model_name:str, model:any, X:pd.DataFrame, y:
     sns.barplot(x="Scores", y="Features", data=dfPermutationImportance)
     plt.title(f"{model_name} Permutation Importance")
     return dfPermutationImportance
+
+
+def showing_lime_explainer(model:any, instance:np.ndarray, X:pd.DataFrame):
+    explainer = lime.lime_tabular.LimeTabularExplainer(training_data=X.values, feature_names=X.columns, mode="regression")
+    explanation = explainer.explain_instance(data_row= instance, predict_fn=lambda x: model.predict(x), num_features=len(X.columns))
+    fig = explanation.as_pyplot_figure()
+
+
+def showing_shap_global_explainer(model:any, type_model:str, X:pd.DataFrame, kernel_explainer_X:pd.DataFrame=None):
+    if type_model=="linear":
+        explainer = shap.LinearExplainer(model, X)
+        values = explainer.shap_values(X)
+    elif type_model=="tree_based":
+        try:
+            explainer = shap.TreeExplainer(model)
+            values = explainer.shap_values(X)
+        except:
+            print("TreeExplainer failed, using KernelExplainer...")
+            def simple_predict(X_array):
+                return model.predict(X_array)
+            explainer = shap.KernelExplainer(simple_predict, kernel_explainer_X)
+            values = explainer.shap_values(X)
+            
+    else:
+        explainer = shap.Explainer(model)
+        values = explainer.shap_values(X)
+    
+    shap.summary_plot(shap_values=values, features=X, feature_names=X.columns)
+    return explainer, values
+
+
+def showing_shap_local_explainer(explainer:any, values:np.ndarray, X:pd.DataFrame, n_instance:int):
+    shap_plot = shap.force_plot(explainer.expected_value,values[n_instance],X.iloc[n_instance],matplotlib=True)
