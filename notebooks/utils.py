@@ -26,6 +26,7 @@ from sklearn.linear_model import Ridge
 from sklearn_genetic import GASearchCV
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import check_classification_targets
+from sklearn.inspection import permutation_importance, PartialDependenceDisplay
 from sklearn_genetic.space import Categorical, Integer, Continuous
 from xgboost import XGBRegressor
 from statsmodels.tsa.arima.model import ARIMA
@@ -313,26 +314,31 @@ def executing_and_saving_clustering_model(model:any, model_name:str, X:pd.DataFr
 
 
 def executing_and_saving_regression_model(model:any, model_name:str, X:pd.DataFrame, y:pd.DataFrame, X_sample:pd.DataFrame, y_sample:pd.DataFrame,\
-                                          X_test:pd.DataFrame, y_test:pd.DataFrame, label_data:str, search_space:dict, init_path:str=".."):   
+                                          X_test:pd.DataFrame, y_test:pd.DataFrame, label_data:str, search_space:dict, init_path:str="..", automl_flg:bool=False):   
     with mlflow.start_run(run_name=f"{model_name} Model Run") as run:
         logging.getLogger("mlflow").setLevel(logging.CRITICAL)
-        
-        if search_space is not None:
-            evolution_regressor = GASearchCV(
-                estimator=model,
-                scoring="neg_root_mean_squared_error",
-                param_grid=search_space,
-                population_size=4,
-                generations=4,
-                cv=3,
-                n_jobs=1,
-                verbose=True,
-            )
-            evolution_regressor.fit(X_sample,y_sample)
+
+        if automl_flg:
+            model.fit(X_sample,y_sample)
             model = evolution_regressor.best_estimator_
             model.fit(X,y)
-        else:
-            model.fit(X,y)
+        else:          
+            if search_space is not None:
+                evolution_regressor = GASearchCV(
+                    estimator=model,
+                    scoring="neg_root_mean_squared_error",
+                    param_grid=search_space,
+                    population_size=4,
+                    generations=4,
+                    cv=3,
+                    n_jobs=1,
+                    verbose=True,
+                )
+                evolution_regressor.fit(X_sample,y_sample)
+                model = evolution_regressor.best_estimator_
+                model.fit(X,y)
+            else:
+                model.fit(X,y)
             
         if model_name.lower().split()[0] == "lightgbm":
             mlflow.lightgbm.log_model(model, f"{model_name}")
@@ -466,7 +472,7 @@ def graphing_regression_models_results(metrics_01:tuple, metrics_02:tuple, metri
         plt.text(
             x=row["Root Mean Squared Error"] / 2,
             y=i,
-            s=f"RMSE = {row['Root Mean Squared Error']:.4f}",
+            s=f"{row['Root Mean Squared Error']:.4f}",
             ha="center",
             va="center",
             fontsize=10,
@@ -882,7 +888,23 @@ class RidgeModelStackingEnsemble(BaseEstimator, RegressorMixin):
             meta_features[:, i] = model.predict(X)
             
         return self.meta_regressor_.predict(meta_features)
+
+    @property
+    def feature_importances_(self):
+        check_is_fitted(self, "is_fitted_")
+        
+        if hasattr(self.meta_regressor_, "coef_"):
+            importances = np.abs(self.meta_regressor_.coef_)
+            if importances.sum() > 0:
+                importances = importances / importances.sum()
+            return importances
+        else:
+            raise AttributeError("Meta regressor doesn't have coef_ attribute")
     
+    def get_trained_base_models(self):
+        check_is_fitted(self, "is_fitted_")
+        return self.base_models
+
     def fit_predict(self, X, y):
         self.fit(X, y)
         return self.predict(X)
@@ -964,3 +986,18 @@ def graphing_temporal_series_components(model:any, model_name:str, predictions_d
     plt.suptitle(f"{model_name} Temporal Serie Components", fontweight="bold")
     plt.tight_layout()
     plt.show()
+
+
+def showing_normalized_features_importance(model_name:str, features_importances:np.ndarray, X:pd.DataFrame):
+    normalized_features_importance =  (features_importances - np.min(features_importances)) / (np.max(features_importances) - np.min(features_importances))
+    dfFeaturesImportance = pd.DataFrame({"Features": X.columns, "Scores": normalized_features_importance}).sort_values(by="Scores", ascending=False)
+    sns.barplot(x="Scores", y="Features", data=dfFeaturesImportance)
+    plt.title(f"{model_name} Features Importance")
+    return dfFeaturesImportance
+
+
+def showing_permutation_importance(model_name:str, model:any, X:pd.DataFrame, y:pd.DataFrame):
+    dfPermutationImportance = pd.DataFrame({"Features":X.columns, "Scores":permutation_importance(model, X, y, n_repeats=10,random_state=SEED).importances_mean}).sort_values(by="Scores", ascending=False)
+    sns.barplot(x="Scores", y="Features", data=dfPermutationImportance)
+    plt.title(f"{model_name} Permutation Importance")
+    return dfPermutationImportance
