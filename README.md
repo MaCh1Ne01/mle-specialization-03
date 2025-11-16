@@ -61,51 +61,32 @@ Este proyecto corresponde al curso MLE 3 de la Especialización MLE.
 ```
 
 ## Problemática
-Se requiere implementar un modelo de forecasting para predecir los precios de acciones de cierre de compañías diariamente con el objetivo de planificar la mejor estrategia de Trading que permita obtener la mayor rentabilidad posible de los clientes.
+Se requiere implementar un modelo de forecasting para predecir los precios de cierre de acciones de compañías diariamente con el objetivo de planificar la mejor estrategia de Trading que permita obtener la mayor rentabilidad posible de los clientes.
 
 ## Diagrama de flujo
 <img src="https://drive.google.com/uc?export=view&id=1gX15Ta7DtSOdPLy-vONkdK4m81F4Y6IM" allow="autoplay">
 
 ## Descripción del dataset
-El conjunto de datos fue extraído del repositorio de datasets de Kaggle, dicho conjunto de datos contiene información sobre el comportamiento de compra de los clientes, así como su aceptación a campañas anteriores realizadas por el supermarket. El dataset contiene un total de 336006 registros y 29 características, las cuales se detallan a continuación:
+El conjunto de datos fue extraído del repositorio de datasets de Kaggle, dicho conjunto de datos contiene información histórica (2018-2023) del mercado de valores extraída de Yahoo Finance, incluyendo métricas de rendimiento bursátil de las top 500 empresas. El dataset contiene un total de 602962 registros y 9 características, las cuales se detallan a continuación:
 
 | **Feature**         | **Descripción**                                                                                                        |
 |:-------------------:|:----------------------------------------------------------------------------------------------------------------------:|
-| ID                  | Código UUID del cliente.                                                                                               |
-| Year_Birth          | Año de nacimiento del cliente.                                                                                         |
-| Education           | Nivel de educación del cliente.                                                                                        |
-| Marital_Status      | Estado civil del cliente.                                                                                              |
-| Income              | Monto de ingresos anuales del cliente.                                                                                 |
-| Kidhome             | Número de niños por casa familiar del cliente.                                                                         |
-| Teenhome            | Número de jóvenes por casa familiar del cliente.                                                                       |
-| Dt_Customer         | Fecha de registro del cliente en el sistema del supermarket.                                                           |
-| Recency             | Días transcurridos desde la última compra del cliente.                                                                 |
-| MntWines            | Monto gastado en vino por el cliente el último año.                                                                    |
-| MntFruits           | Monto gastado en frutas por el cliente el último año.                                                                  |
-| MntMeatProducts     | Monto gastado en carnes por el cliente el último año.                                                                  |
-| MntFishProducts     | Monto gastado en pescados por el cliente el último año.                                                                |
-| MntSweetProducts    | Monto gastado en dulces por el cliente el último año.                                                                  |
-| MntGoldProds        | Monto gastado en joyas de oro por el cliente el último año.                                                            |
-| NumDealsPurchases   | Número de compras realizadas por el cliente en el supermarket.                                                         |
-| NumWebPurchases     | Número de compras realizadas por el cliente en la web del supermarket.                                                 |
-| NumCatalogPurchases | Número de compras realizadas por el cliente por catálogo del supermarket.                                              |
-| NumStorePurchases   | Número de compras realizadas por el cliente presencialmente en el supermarket.                                         |
-| NumWebVisitsMonth   | Número de visitas mensuales realizadas por el cliente a la web del supermarket.                                        |
-| AcceptedCmp3        | Flag binario que indica si el cliente realizó una compra durante la tercera campaña del supermarket.                   |
-| AcceptedCmp4        | Flag binario que indica si el cliente realizó una compra durante la cuarta campaña del supermarket.                    |
-| AcceptedCmp5        | Flag binario que indica si el cliente realizó una compra durante la quinta campaña del supermarket.                    |
-| AcceptedCmp1        | Flag binario que indica si el cliente realizó una compra durante la primera campaña del supermarket.                   |
-| AcceptedCmp2        | Flag binario que indica si el cliente realizó una compra durante la segunda campaña del supermarket.                   |
-| Complain            | Flag binario que indica si el cliente realizó una queja del supermarket.                                               |
-| Z_CostContact       | Costo que representó el contactar con el cliente.                                                                      |
-| Z_Revenue           | Ingresos del cliente después de la compra del producto a través de una campaña de marketing.                           |
-| Response            | Flag binario que indica si el cliente realizó una compra durante la actual campaña del supermarket.                    |
+| Date                | La fecha correspondiente a los datos bursátiles registrados.                                                           |
+| Open                | Precio de apertura de la acción en una fecha determinada.                                                              |
+| High                | Precio máximo alcanzado por la acción en una fecha determinada.                                                        |
+| Low                 | Precio mínimo alcanzado por la acción en una fecha determinada.                                                        |
+| Close               | Precio de cierre de la acción en una fecha determinada.                                                                |
+| Volume              | Volumen de acciones negociadas en una fecha determinada.                                                               |
+| Dividends           | Dividendos pagados por la empresa en una fecha determinada (en caso aplique).                                          |
+| Stock Splits        | Cantidad de desdoblamientos de acciones ocurrido en una fecha determinada.                              |
+| Company             | Símbolo bursátil que identifica a la empresa a la que pertenece la acción.                                             |
 
 ## Model Card
-<img src="https://drive.google.com/uc?export=view&id=1RYgDcOF8v0pK0pZGsQMs9oo3YD1C1nJ1" allow="autoplay">
+<img src="https://drive.google.com/uc?export=view&id=1n6CgkFWIPHqzD-qvpx9wyAcpL-aTyReU" allow="autoplay">
 
 ## Resultados con métricas de evaluación
-<img src="https://drive.google.com/uc?export=view&id=11OLpbaqE2pG3rk25S8C7BNb0QktkkP7Z" allow="autoplay">
+<img src="https://drive.google.com/uc?export=view&id=1uC02gi9L-U6EgukmwvKOCvPhBl-w0OUu" allow="autoplay">
+<img src="https://drive.google.com/uc?export=view&id=1QZsuNd3v61gY0XsliaCAvd8EnSo0Azlo" allow="autoplay">
 
 ## Conclusiones
 * Los modelos K-Means y OPTICS+K-Means superan significativamente a Gaussian Mixture en todas las métricas de evaluación para este dataset, por lo que se infiere que los datos tienen una estructura que se adapta mejor a métodos basados en distancias que a modelos probabilísticos.
