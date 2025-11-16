@@ -101,6 +101,8 @@ El conjunto de datos fue extraído del repositorio de datasets de Kaggle, dicho 
 
 * Finalmente, se concluye que, debido al buen rendimiento obtenido (comparativa), baja complejidad, eficiencia computacional, interpretabilidad, escalabilidad y madurez del algoritmo, el modelo K-Means es el idóneo a llevar a un ambiente productivo, ya que se puede explotar aún más con un adecuado tunning de hiperparámetros.
 
+## Model Performance Monitoring
+<img src="https://drive.google.com/uc?export=view&id=1Na0h19NWhl9jfCqJkloxCvkMSJKA8N9Q" allow="autoplay">
 
 ## Manual de ejecución
 Revisar las instrucciones en la [carpeta de referencias.](./references)
