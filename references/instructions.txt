@@ -1,0 +1,13 @@
+Abrir un terminal en la raíz del proyecto y ejecutar los siguientes comandos:
+
+make dataset -> Para ejecutar las fases de carga, limpieza y división del dataset.
+
+make features -> Para ejecutar el Feature Engineering en los datasets obtenidos del paso anterior.
+
+make train -> Para entrenar y guardar los modelos con los datasets procesados.
+
+make predict -> Para realizar las predicciones con los modelos entrenados.
+
+make all -> Para ejecutar todos los pasos previamente indicados en esa secuencia.
+
+make cleaning -> Para borrar todos los artefactos generados (datasets, modelos y predicciones).

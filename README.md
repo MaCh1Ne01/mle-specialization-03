@@ -82,7 +82,7 @@ El conjunto de datos fue extraído del repositorio de datasets de Kaggle, dicho 
 | Company             | Símbolo bursátil que identifica a la empresa a la que pertenece la acción.                                             |
 
 ## Model Card
-<img src="https://drive.google.com/uc?export=view&id=1n6CgkFWIPHqzD-qvpx9wyAcpL-aTyReU" allow="autoplay">
+<img src="https://drive.google.com/uc?export=view&id=1fUqmUpDA2wSIrindQZNTXrywLWLjndlb" allow="autoplay">
 
 ## Resultados con métricas de evaluación
 <img src="https://drive.google.com/uc?export=view&id=1uC02gi9L-U6EgukmwvKOCvPhBl-w0OUu" allow="autoplay">
@@ -106,5 +106,5 @@ El conjunto de datos fue extraído del repositorio de datasets de Kaggle, dicho 
 Revisar las instrucciones en la [carpeta de referencias.](./references)
 
 ## Enlaces de experimentos
-* DagsHub + MLflow: https://dagshub.com/MaCh1Ne01/mle-specialization-02.mlflow/
-* Modelo Productivo: https://dagshub.com/MaCh1Ne01/mle-specialization-02.mlflow/#/models/CustomerSegmentationModel
+* DagsHub + MLflow: https://dagshub.com/MaCh1Ne01/mle-specialization-03.mlflow/
+* Modelo Productivo: https://dagshub.com/MaCh1Ne01/mle-specialization-03.mlflow/#/models/StockCompaniesForecastingModel
