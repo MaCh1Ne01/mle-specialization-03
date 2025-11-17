@@ -89,17 +89,15 @@ El conjunto de datos fue extraído del repositorio de datasets de Kaggle, dicho 
 <img src="https://drive.google.com/uc?export=view&id=1QZsuNd3v61gY0XsliaCAvd8EnSo0Azlo" allow="autoplay">
 
 ## Conclusiones
-* Los modelos K-Means y OPTICS+K-Means superan significativamente a Gaussian Mixture en todas las métricas de evaluación para este dataset, por lo que se infiere que los datos tienen una estructura que se adapta mejor a métodos basados en distancias que a modelos probabilísticos.
+* Los modelos XGBoost y LightGBM presentan prácticamente el mismo rendimiento, ambos con un MAE cercano a 9 y un R² alrededor de 0.93, por lo que se podría inferir que los modelos basados en árboles no son los idóneos para este dataset.
 
-* La detección de outliers de OPTICS no aporta una mejora sustancial en el rendimiento del ensemble, ya que OPTICS+K-Means ofrece una ventaja mínima sobre el modelo K-Means en Silhouette score y Davies-Bouldin score.
+* El modelo ElasticNet de forma individual alcanzó un rendimiento muy alto, el cual compite con el performance del Ridge Stacking Ensemble Regressor (Ridge de predicciones ElasticNet, XGBoost y LightGBM), ambos con un MAE cercano a 1.12 y un R² de 0.9999, lo cual indica que la relación lineal domina el problema. Además, esta similitud entre ambos modelos se corrobora con la feature importance obtenida del modelo Ensemble, dando un 99% de relevancia a las predicciones del modelo lineal individual.
 
-* En general, los valores del Silhouette score son relativamente bajos (inferiores a 0.14), lo cual indica que la estructura de clusters no es muy definida (existe overlap).
+* El modelo Ridge Stacking Ensemble Regressor obtuvo un MAPE por debajo del 1%, lo cual indica que la precisión alcanzada es comercialmente viable, ya que un 0.68% de error porcentual significa que las predicciones son extremadamente confiables para la toma de decisiones, por lo que es el idóneo a llevar a un ambiente productivo.
 
-* El sampling del 5% fue efectivo para realizar una evaluación comparativa, sin embargo, podría estar ocultando patrones en la estructura completa de datos.
+* El modelo Ensemble captura lo mejor de cada modelo invidual preentrenado, ya que aprovecha la precisión lineal de ElasticNet y corrige los sesgos con los patrones capturados por los modelos basados en árboles XGBoost Regressor y LightGBM Regressor.
 
-* A pesar de que, teóricamente hay más grados de libertad para configurar el ensemble y mejorar su rendimiento, la complejidad computacional adicional de dicho modelo no se justifica por la mejora marginal en los resultados obtenidos.
-
-* Finalmente, se concluye que, debido al buen rendimiento obtenido (comparativa), baja complejidad, eficiencia computacional, interpretabilidad, escalabilidad y madurez del algoritmo, el modelo K-Means es el idóneo a llevar a un ambiente productivo, ya que se puede explotar aún más con un adecuado tunning de hiperparámetros.
+* Para el mejor modelo, el Ridge Stacking Ensemble Regressor, se analizaron las feature importances para cada modelo base y se obtuvo que High y Low tienen la mayor relevancia, seguidos de Open. Además, la feature Company no presenta relevancia (PDP horizontal).
 
 ## Model Performance Monitoring
 <img src="https://drive.google.com/uc?export=view&id=1Na0h19NWhl9jfCqJkloxCvkMSJKA8N9Q" allow="autoplay">
